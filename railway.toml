@@ -1,6 +1,10 @@
 [build]
 builder = "NIXPACKS"
 
+# Tell Railway explicitly which directory to use
+[project]
+root = "server"
+
 [env]
 NODE_ENV = "production"
 
@@ -8,7 +12,7 @@ NODE_ENV = "production"
 nixPkgs = ["nodejs-20_x"]
 
 [phases.install]
-cmds = ["cd server && npm install"]
+cmds = ["npm install"]
 
 [start]
-cmd = "cd server && node index.js"
+cmd = "npm start"
