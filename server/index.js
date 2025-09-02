@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
-import mysql from "mysql2/promise";
 import { fileURLToPath } from "url";
+import pool from "./db.js"; // ✅ import db connection
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -23,15 +23,12 @@ app.use(
   })
 );
 
-
 const imagesDir = path.join(__dirname, "schoolImages");
 if (!fs.existsSync(imagesDir)) {
   fs.mkdirSync(imagesDir, { recursive: true });
 }
 
-
 app.use("/schoolImages", express.static(imagesDir));
-
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, imagesDir),
@@ -42,26 +39,14 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-
-const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DB,
-  connectionLimit: 10,
-});
-
-
 app.get("/api/health", (req, res) => {
   res.json({ ok: true });
 });
-
 
 app.post("/api/schools", upload.single("image"), async (req, res) => {
   try {
     const { name, address, city, state, contact, email_id } = req.body;
     if (!name || !address || !city || !state || !contact || !email_id) {
-      
       return res.status(400).json({ error: "All fields are required." });
     }
     if (!req.file) {
@@ -93,8 +78,6 @@ app.post("/api/schools", upload.single("image"), async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-
-
 
 app.get("/api/schools", async (req, res) => {
   try {
