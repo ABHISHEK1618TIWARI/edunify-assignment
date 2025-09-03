@@ -6,7 +6,7 @@ import multer from "multer";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import pool from "./db.js"; // ✅ import db connection
+import pool from "./db.js";
 
 dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
@@ -53,7 +53,7 @@ app.post("/api/schools", upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: "Image is required." });
     }
 
-    const imageFilename = req.file.filename;
+    const imageFilename = req.file.path;
 
     const sql = `
       INSERT INTO schools (name, address, city, state, contact, image, email_id)
