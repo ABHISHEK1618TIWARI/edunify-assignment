@@ -53,7 +53,7 @@ app.post("/api/schools", upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: "Image is required." });
     }
 
-    const imageFilename = req.file.path;
+    const imageFilename = req.file.fileName;
 
     const sql = `
       INSERT INTO schools (name, address, city, state, contact, image, email_id)
