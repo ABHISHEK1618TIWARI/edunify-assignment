@@ -74,7 +74,7 @@ app.post("/api/schools", upload.single("image"), async (req, res) => {
       imageUrl: `${process.env.BASE_URL}/schoolImages/${imageFilename}`,
     });
   } catch (err) {
-    console.error("Create school error:", err.stack);
+    console.error("Create school error:", err.message, err.stack);
     res.status(500).json({ error: "Server error" });
   }
 });
